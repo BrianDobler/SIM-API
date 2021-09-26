@@ -3,8 +3,8 @@ const uniformDistributionContoller = {};
 uniformDistributionContoller.generateValues = async (request, response) => {
     const { body } = request;
     const { lowerBound, upperBound, numberOfSamples } = body;
-    
-    let values = [];
+
+    const values = [];
 
     for (let index = 0; index < numberOfSamples; index++) {
         let x = lowerBound + (Math.random() * (upperBound - lowerBound));
@@ -14,7 +14,7 @@ uniformDistributionContoller.generateValues = async (request, response) => {
 
     response.status(200)
         .json({
-            series: values
+            series: values,
         });
 };
 

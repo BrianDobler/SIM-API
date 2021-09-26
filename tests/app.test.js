@@ -1,10 +1,9 @@
-const app = require('../app');
 const supertest = require('supertest');
+const app = require('../app');
 
 const api = supertest(app);
 
 describe('general test', () => {
-
     it('return pong to ping', async () => {
         const response = await api.get('/ping');
         expect(response.body).toContain('Pong');
@@ -12,7 +11,6 @@ describe('general test', () => {
 });
 
 describe('distributions', () => {
-    
     it('return a normal distribution array', async () => {
     });
 
@@ -21,5 +19,4 @@ describe('distributions', () => {
 
     it('return an uniform distribution array', () => {
     });
-
 });
