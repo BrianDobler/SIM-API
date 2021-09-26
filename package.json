@@ -4,12 +4,17 @@
   "description": "Una API para la materia SIM",
   "main": "app.js",
   "scripts": {
-    "test": "jest --watchAll",
-    "start": "nodemon app.js"
+    "test": "NODE_ENV=test jest --watchAll --forceExit",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
   "author": "Gino Massei",
   "license": "ISC",
+  "eslintConfig": {
+    "extends": "./config/.eslintrc.json"
+  },
   "dependencies": {
+    "cors": "2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {
@@ -17,6 +22,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.2",
     "jest": "^27.2.2",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
   }
 }
