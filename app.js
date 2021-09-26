@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
+
+// Using JSON middleware.
 app.use(express.json());
 
 // Enable CROSS - ORIGIN RESOURCE SHARING
