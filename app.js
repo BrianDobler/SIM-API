@@ -1,16 +1,26 @@
 const express = require('express');
-const distribution = require('./controllers/normalDistributionController');
+const cors = require('cors');
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+// Enable CROSS - ORIGIN RESOURCE SHARING
+app.use(cors());
 
-const NormalDistribution = new distribution(1, 50);
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-    let randomValues = NormalDistribution.generateValues();
-    res.send(randomValues);
+// Just a method checking if the conecction is alive.
+app.get('/ping', (request, response) => {
+    response 
+        .status(200)
+        .json('Pong');
 });
 
+// Distiribution routing.
+const distributionRoutes = require('./routes/distributions.routes');
+app.use('/distributions', distributionRoutes);
 
-app.listen(port, () => console.log(`listening on http://localhost:${port}`));
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+module.exports = app;
