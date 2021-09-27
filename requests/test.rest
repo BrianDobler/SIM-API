@@ -3,10 +3,11 @@ GET http://localhost:3000/ping
 ###
 POST http://localhost:3000/distributions/uniform HTTP/1.1
 Content-Type: application/json
+
 {
-    "lowerBound": "1",
-    "upperBound": "4",
-    "numberOfSamples": "50"
+    "lowerBound": 1,
+    "upperBound": 4,
+    "numberOfSamples": 50
 }
 
 ###
