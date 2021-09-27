@@ -1,15 +1,17 @@
-const uniformDistributionContoller = {};
+const UniformDistribution = require('../../helpers/distributions/UniformDistribution');
 
+const uniformDistributionContoller = {};
 uniformDistributionContoller.generateValues = async (request, response) => {
     const { body } = request;
     const { lowerBound, upperBound, numberOfSamples } = body;
 
+    const distribution = new UniformDistribution(lowerBound, upperBound);
     const values = [];
 
-    for (let index = 0; index < numberOfSamples; index++) {
-        let x = lowerBound + (Math.random() * (upperBound - lowerBound));
-        x = (Math.round((x) * 10000.0) / 10000.0);
-        values[index] = x;
+    for (let i = 0; i < numberOfSamples; i++) {
+        const randomValue = Math.random();
+        const x = distribution.nextValue(randomValue);
+        values[i] = x;
     }
 
     response.status(200)

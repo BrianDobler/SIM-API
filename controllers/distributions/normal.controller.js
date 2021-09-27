@@ -1,24 +1,19 @@
-const normalDistributionController = {};
+const NormalDistribution = require('../../helpers/distributions/NormalDistribution');
 
+const normalDistributionController = {};
 normalDistributionController.generateValues = async (request, response) => {
     const { body } = request;
     const { sigma, mu, numberOfSamples } = body;
 
+    const distribution = new NormalDistribution(sigma, mu);
     const values = [];
     let x;
 
-    for (let index = 0; index < numberOfSamples; index++) {
-        const rnd1 = Math.random();
-        const rnd2 = Math.random();
-
-        if (numberOfSamples % 2 === 0) {
-            x = (Math.sqrt(-2 * Math.log(rnd1)) * Math.cos(2 * Math.PI * rnd2)) * sigma + mu;
-        } else {
-            x = (Math.sqrt(-2 * Math.log(rnd1)) * Math.sin(2 * Math.PI * rnd2)) * sigma + mu;
-        }
-        x = (Math.round((x) * 10000.0) / 10000.0);
-
-        values[index] = x;
+    for (let i = 0; i < numberOfSamples; i++) {
+        const randomValue1 = Math.random();
+        const randomValue2 = Math.random();
+        x = distribution.nextValue(randomValue1, randomValue2);
+        values[i] = x;
     }
 
     response.status(200)

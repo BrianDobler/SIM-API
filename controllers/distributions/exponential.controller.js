@@ -1,17 +1,16 @@
-const exponentialDistributionController = {};
+const ExponentialDistribution = require('../../helpers/distributions/ExponentialDistribution');
 
+const exponentialDistributionController = {};
 exponentialDistributionController.generateValues = async (request, response) => {
     const { body } = request;
     const { lambda, numberOfSamples } = body;
 
+    const distribution = new ExponentialDistribution(lambda);
     const values = [];
-    for (let index = 0; index < numberOfSamples; index++) {
+    for (let i = 0; i < numberOfSamples; i++) {
         const randomValue = Math.random();
-
-        let x = (-1 / lambda) * Math.log(1 - randomValue);
-        x = (Math.round((x) * 10000.0) / 10000.0);
-
-        values[index] = x;
+        const x = distribution.nextValue(randomValue);
+        values[i] = x;
     }
 
     response.status(200)
