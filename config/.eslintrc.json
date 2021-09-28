@@ -29,6 +29,7 @@
             {
                 "code": 160
             }
-        ]
+        ],
+        "no-console": "off"
     }
 }
