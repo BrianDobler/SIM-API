@@ -23,6 +23,12 @@ const distributionRoutes = require('./routes/distributions.routes');
 
 app.use('/distributions', distributionRoutes);
 
+// Montecarlo Routing.
+const montecarloRoutes = require('./routes/montecarlo.routes');
+
+app.use('/montecarlo', montecarloRoutes);
+
+// Run the app on the selected port.
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
