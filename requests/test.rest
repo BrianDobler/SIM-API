@@ -26,5 +26,13 @@ Content-Type: application/json
 
 {
     "lambda": "5",
-    "numberOfSamples": "100000"
+    "numberOfSamples": "100"
+}
+
+###
+GET http://localhost:3000/montecarlo/simulate HTTP/1.1
+Content-Type: application/json
+
+{
+    "daysToSimulate": 100
 }
