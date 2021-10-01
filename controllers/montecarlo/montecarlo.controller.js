@@ -4,6 +4,7 @@ const Task = require('../../helpers/montecarlo/Task');
 const montecarloContoller = {};
 montecarloContoller.simulate = async (request, response) => {
     const { body } = request;
+    const { daysToSimulate } = body;
 
     // Create the tasks objects to pass to the montecarlo simulation.
     const taskA1 = new Task();
@@ -14,9 +15,13 @@ montecarloContoller.simulate = async (request, response) => {
 
     // Create the montecarlo simulation.
     const montecarlo = new MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5);
-    montecarlo.setTaskPrecedeces();
-    montecarlo.setTaskDistributions();
-    montecarlo.setTaskDutrations();
+    montecarlo.setTaskDistributions(); // Set the distributions to calculated task's time to complete.
+
+    montecarlo.simulate(daysToSimulate);
+
+    response
+        .status(418)
+        .json({ response: 'ok' });
 };
 
 module.exports = montecarloContoller;
