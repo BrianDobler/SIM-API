@@ -31,8 +31,8 @@ function Task() {
 
     this.calculateTimeToComplete = () => {
         // Calculate the task duration based on the probability.
-        this.randomValue = this.generator.random();
-        const randomValue2 = this.generator.random();
+        this.randomValue = Math.round((this.generator.random()) * 10000.0) / 10000.0;
+        const randomValue2 = Math.round((this.generator.random()) * 10000.0) / 10000.0;
 
         this.timeToCompleted = Math.floor(this.distribution.nextValue(this.randomValue, randomValue2));
         this.completed = false;
