@@ -40,11 +40,6 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
             this.tasksRunning = true; // Set the flag, there are tasks running now.
             this.assemblyTaskDuration = 1;
         }
-        console.log(this.taskA1.timeToCompleted);
-        console.log(this.taskA2.timeToCompleted);
-        console.log(this.taskA3.timeToCompleted);
-        console.log(this.taskA4.timeToCompleted);
-        console.log(this.taskA5.timeToCompleted);
 
         // A day less of each task.
         this.assemblyTaskDuration++;
