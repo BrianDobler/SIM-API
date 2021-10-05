@@ -8,6 +8,7 @@ function Task() {
     this.completed = false;
     this.timeToCompleted = null;
     this.generator = null;
+    this.randomValue = 0;
 
     this.setDistribution = (distributionType, parameters) => {
         // Set the distribution of the task.
@@ -29,19 +30,19 @@ function Task() {
     };
 
     this.calculateTimeToComplete = () => {
-        // Calculate the tsak duration based on the probability.
-        const randomValue1 = this.generator.random();
+        // Calculate the task duration based on the probability.
+        this.randomValue = this.generator.random();
         const randomValue2 = this.generator.random();
 
-        this.timeToCompleted = Math.floor(this.distribution.nextValue(randomValue1, randomValue2));
+        this.timeToCompleted = Math.floor(this.distribution.nextValue(this.randomValue, randomValue2));
         this.completed = false;
     };
 
     this.aDayLess = () => {
         // Decrement a day of time to complete a task.
-        if (this.timeToCompleted > 0) {
+        if (this.timeToCompleted > 1) { // ??? 1 or 0. No really sure.
             this.timeToCompleted--;
-        } else if (this.timeToCompleted == null) {
+        } else if (this.timeToCompleted === null) {
             return null; // If there is no days to decrement simply do nothing.
         } else { // If no days. Completed TRUE, Time to completed reset.
             this.timeToCompleted = null;
