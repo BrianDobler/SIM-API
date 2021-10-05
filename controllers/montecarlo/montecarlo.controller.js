@@ -4,24 +4,34 @@ const Task = require('../../helpers/montecarlo/Task');
 const montecarloContoller = {};
 montecarloContoller.simulate = async (request, response) => {
     const { body } = request;
-    const { daysToSimulate } = body;
+    const {
+        numberOfSimulations,
+        generatorType,
+        activities,
+    } = body;
 
     // Create the tasks objects to pass to the montecarlo simulation.
-    const taskA1 = new Task();
-    const taskA2 = new Task();
-    const taskA3 = new Task();
-    const taskA4 = new Task();
-    const taskA5 = new Task();
+    const tasks = [];
+    for (let i = 0; i < 5; i++) {
+        tasks[i] = new Task();
+        tasks[i].setDistribution(activities[i].distributionName, activities[i].distribution);
+        tasks[i].setGenerator(generatorType);
+    }
 
     // Create the montecarlo simulation.
-    const montecarlo = new MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5);
-    montecarlo.setTaskDistributions(); // Set the distributions to calculated task's time to complete.
-
-    montecarlo.simulate(daysToSimulate);
+    const montecarloRows = [];
+    const montecarlo = new MontecarloSimulation(tasks[0], tasks[1], tasks[2], tasks[3], tasks[4]);
+    for (let i = 0; i < numberOfSimulations; i++) {
+        montecarlo.simulate();
+        montecarloRows[i] = montecarlo.getStateVector();
+    }
 
     response
-        .status(418)
-        .json({ response: 'ok' });
+        .status(200)
+        .json({
+            response: 'ok',
+            activities: montecarloRows,
+        });
 };
 
 module.exports = montecarloContoller;
