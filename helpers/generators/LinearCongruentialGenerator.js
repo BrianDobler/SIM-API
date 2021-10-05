@@ -14,7 +14,7 @@ function LinearCongruentialGenerator(
         return this.seed;
     };
 
-    this.nextRandom = () => this.next() / this.mod;
+    this.random = () => this.next() / this.mod;
 }
 
 module.exports = LinearCongruentialGenerator;
