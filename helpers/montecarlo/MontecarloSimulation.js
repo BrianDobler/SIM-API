@@ -88,7 +88,6 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         assemblyTaskDuration: this.assemblyTaskDuration,
         day: this.dayNumber,
         lastAssemblyTaskDuration: this.lastAssemblyTaskDuration,
-        // cummulativeAssemblyTaskDuration: this.cummulativeAssemblyTaskDuration,
         mean: this.mean,
     });
 }
