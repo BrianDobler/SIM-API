@@ -10,8 +10,12 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
     this.tasksRunning = false;
     this.assemblyTaskDuration = 0;
     this.lastAssemblyTaskDuration = 0;
+    this.assemblyTaskCounter = 0;
+    this.assemblyTask45Counter = 0;
     this.assemblyTaskFinishedDay = 0;
     this.mean = 0;
+    this.min = 0;
+    this.max = 0;
 
     this.simulate = () => {
         this.dayNumber++;
@@ -24,10 +28,23 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
             this.taskA4.completed = false;
             this.taskA5.completed = false;
 
+            if (this.assemblyTaskDuration !== 0 && this.lastAssemblyTaskDuration === 0) {
+                // Set the minium assembly task duration.
+                this.min = this.assemblyTaskDuration;
+            }
+
             this.lastAssemblyTaskDuration = this.assemblyTaskDuration;
+
+            if (this.lastAssemblyTaskDuration <= 45) {
+                // If the elapsed time of a task is less than 45 days.
+                this.assemblyTask45Counter++;
+            }
+
+            this.setNewAssemblyTaskDuration();
             this.assemblyTaskFinishedDay++;
 
             this.mean = this.getMean();
+            this.assemblyTaskCounter++;
         }
 
         // If there is no tasks running then start new tasks.
@@ -73,8 +90,20 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         return (Math.round((x) * 10000.0) / 10000.0);
     };
 
+    this.setNewAssemblyTaskDuration = () => {
+        // Checks for the min or max assembly task duration and stores it.
+        if (this.max <= this.lastAssemblyTaskDuration) {
+            this.max = this.lastAssemblyTaskDuration;
+        } else if (this.min >= this.lastAssemblyTaskDuration) {
+            this.min = this.lastAssemblyTaskDuration;
+        }
+    };
+
+    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.assemblyTaskCounter) * 10000.0) / 10000.0);
+
     this.getStateVector = () => ({
         // Return all the variables to be checked and displayed on the client.
+        // This is the state vector.
         randomA1: this.taskA1.randomValue,
         A1DaysLeft: this.taskA1.timeToCompleted,
         randomA2: this.taskA2.randomValue,
