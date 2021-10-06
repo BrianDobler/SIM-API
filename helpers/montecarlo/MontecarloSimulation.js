@@ -5,6 +5,7 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
     this.taskA3 = taskA3;
     this.taskA4 = taskA4;
     this.taskA5 = taskA5;
+    this.dayNumber = 0;
 
     this.tasksRunning = false;
     this.assemblyTaskDuration = 0;
@@ -57,6 +58,10 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         this.assemblyTaskDuration++;
     };
 
+    this.setDay = (number) => {
+        this.dayNumber = number;
+    };
+
     this.getStateVector = () => ({
         // Return all the variables to be checked and displayed on the client.
         randomA1: this.taskA1.randomValue,
@@ -70,6 +75,7 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         randomA5: this.taskA5.randomValue,
         A5DaysLeft: this.taskA5.timeToCompleted,
         assemblyTaskDuration: this.assemblyTaskDuration,
+        day: this.dayNumber,
     });
 }
 module.exports = MontecarloSimulation;
