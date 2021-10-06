@@ -6,6 +6,8 @@ montecarloContoller.simulate = async (request, response) => {
     const { body } = request;
     const {
         numberOfSimulations,
+        from,
+        to,
         generatorType,
         activities,
     } = body;
@@ -25,9 +27,13 @@ montecarloContoller.simulate = async (request, response) => {
     // Get the initial conditions of the simulation.
     montecarloRows[0] = montecarlo.getStateVector();
 
-    for (let i = 1; i < numberOfSimulations; i++) {
+    for (let i = 1; i <= numberOfSimulations; i++) {
         montecarlo.simulate();
-        montecarloRows[i] = montecarlo.getStateVector();
+
+        if (i <= 20 || ((i % 10000) === 0) || (i >= from && i <= to)) {
+            montecarlo.setDay(i);
+            montecarloRows.push(montecarlo.getStateVector());
+        }
         montecarlo.next();
     }
 
