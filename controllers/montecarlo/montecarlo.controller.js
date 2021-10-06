@@ -29,9 +29,8 @@ montecarloContoller.simulate = async (request, response) => {
 
     for (let i = 1; i <= numberOfSimulations; i++) {
         montecarlo.simulate();
-
+        // montecarloRows.push(montecarlo.getStateVector());
         if (i <= 20 || ((i % 10000) === 0) || (i >= from && i <= to)) {
-            montecarlo.setDay(i);
             montecarloRows.push(montecarlo.getStateVector());
         }
         montecarlo.next();
