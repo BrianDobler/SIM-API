@@ -16,6 +16,7 @@ montecarloContoller.simulate = async (request, response) => {
     const tasks = [];
     for (let i = 0; i < 5; i++) {
         tasks[i] = new Task();
+        // Set the parameters of the distribution of each task.
         tasks[i].setDistribution(activities[i].distributionName, activities[i].distribution);
         tasks[i].setGenerator(generatorType);
     }
@@ -28,19 +29,24 @@ montecarloContoller.simulate = async (request, response) => {
     montecarloRows[0] = montecarlo.getStateVector();
 
     for (let i = 1; i <= numberOfSimulations; i++) {
-        montecarlo.simulate();
-        // montecarloRows.push(montecarlo.getStateVector());
+        montecarlo.simulate(); // Simulate one day.
+
         if (i <= 20 || ((i % 10000) === 0) || (i >= from && i <= to)) {
+            // Store the state vector if the simulation number fits on the given parameters.
             montecarloRows.push(montecarlo.getStateVector());
         }
-        montecarlo.next();
+        montecarlo.next(); // Forward the simulation one day.
     }
 
     response
-        .status(200)
+        .status(200) // All ok. Return 200.
         .json({
             response: 'ok',
             activities: montecarloRows,
+            minValue: montecarlo.min,
+            maxValue: montecarlo.max,
+            mean: montecarlo.mean,
+            probFinishedLess45days: montecarlo.getProbability(),
         });
 };
 
