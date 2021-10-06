@@ -9,8 +9,12 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
 
     this.tasksRunning = false;
     this.assemblyTaskDuration = 0;
+    this.lastAssemblyTaskDuration = 0;
+    this.assemblyTaskFinishedDay = 0;
+    this.mean = 0;
 
     this.simulate = () => {
+        this.dayNumber++;
         if (this.taskA1.completed && this.taskA2.completed && this.taskA3.completed && this.taskA4.completed && this.taskA5.completed) {
             // If all tasks completed. Then set flags to false.
             this.tasksRunning = false;
@@ -19,7 +23,13 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
             this.taskA3.completed = false;
             this.taskA4.completed = false;
             this.taskA5.completed = false;
+
+            this.lastAssemblyTaskDuration = this.assemblyTaskDuration;
+            this.assemblyTaskFinishedDay++;
+
+            this.mean = this.getMean();
         }
+
         // If there is no tasks running then start new tasks.
         if (!this.tasksRunning) {
             // Calulate the elapsed times of the tasks that have no precedences.
@@ -58,8 +68,9 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         this.assemblyTaskDuration++;
     };
 
-    this.setDay = (number) => {
-        this.dayNumber = number;
+    this.getMean = () => {
+        const x = (1 / this.assemblyTaskFinishedDay) * (((this.assemblyTaskFinishedDay - 1) * this.mean) + this.lastAssemblyTaskDuration);
+        return (Math.round((x) * 10000.0) / 10000.0);
     };
 
     this.getStateVector = () => ({
@@ -76,6 +87,9 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         A5DaysLeft: this.taskA5.timeToCompleted,
         assemblyTaskDuration: this.assemblyTaskDuration,
         day: this.dayNumber,
+        lastAssemblyTaskDuration: this.lastAssemblyTaskDuration,
+        // cummulativeAssemblyTaskDuration: this.cummulativeAssemblyTaskDuration,
+        mean: this.mean,
     });
 }
 module.exports = MontecarloSimulation;
