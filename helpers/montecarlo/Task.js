@@ -6,9 +6,9 @@ const LCG = require('../generators/LinearCongruentialGenerator');
 function Task() {
     this.distribution = null;
     this.completed = false;
-    this.timeToCompleted = null;
+    this.timeToCompleted = '-';
     this.generator = null;
-    this.randomValue = 0;
+    this.randomValue = '-';
 
     this.setDistribution = (distributionType, parameters) => {
         // Set the distribution of the task.
@@ -42,13 +42,13 @@ function Task() {
         // Decrement a day of time to complete a task.
         if (this.timeToCompleted > 1) { // ??? 1 or 0. No really sure.
             this.timeToCompleted--;
-        } else if (this.timeToCompleted === null) {
-            return null; // If there is no days to decrement simply do nothing.
+        } else if (this.timeToCompleted === '-') {
+            // If there is no days to decrement simply do nothing.
         } else { // If no days. Completed TRUE, Time to completed reset.
-            this.timeToCompleted = null;
+            this.timeToCompleted = '-';
             this.completed = true;
         }
-        return true; // Not sure how to perform this. But now it's working.
+        // Not sure how to perform this. But now it's working.
     };
 }
 

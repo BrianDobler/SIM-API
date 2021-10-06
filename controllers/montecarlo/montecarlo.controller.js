@@ -21,9 +21,14 @@ montecarloContoller.simulate = async (request, response) => {
     // Create the montecarlo simulation.
     const montecarloRows = [];
     const montecarlo = new MontecarloSimulation(tasks[0], tasks[1], tasks[2], tasks[3], tasks[4]);
-    for (let i = 0; i < numberOfSimulations; i++) {
+
+    // Get the initial conditions of the simulation.
+    montecarloRows[0] = montecarlo.getStateVector();
+
+    for (let i = 1; i < numberOfSimulations; i++) {
         montecarlo.simulate();
         montecarloRows[i] = montecarlo.getStateVector();
+        montecarlo.next();
     }
 
     response

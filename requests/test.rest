@@ -34,5 +34,47 @@ POST http://localhost:3000/montecarlo/simulate HTTP/1.1
 Content-Type: application/json
 
 {
-    "daysToSimulate": 100
+    "numberOfSimulations": 1000000,
+    "generatorType": "native-generator",
+    "generatorParameters": null,
+    "activities": [
+        {
+            "name": "Actividad 1",
+            "distributionName": "uniform",
+            "distribution": { 
+                "A": 20, 
+                "B": 30 
+            }
+        },
+        {
+            "name": "Actividad 2",
+            "distributionName": "uniform",
+            "distribution": { 
+                "A": 30, 
+                "B": 50 
+            }
+        },
+        {
+            "name": "Actividad 3",
+            "distributionName": "exponential",
+            "distribution": { 
+                "lambda": 30 
+            }
+        },
+        {
+            "name": "Actividad 4",
+            "distributionName": "uniform",
+            "distribution": { 
+                "A": 10, 
+                "B": 20 
+            }
+        },
+        { 
+            "name": "Actividad 5",
+            "distributionName": "exponential",
+            "distribution": { 
+                "lambda": 5 
+            }
+        }
+    ]   
 }
