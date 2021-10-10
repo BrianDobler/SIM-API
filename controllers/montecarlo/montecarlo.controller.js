@@ -35,7 +35,6 @@ montecarloContoller.simulate = async (request, response) => {
             // Store the state vector if the simulation number fits on the given parameters.
             montecarloRows.push(montecarlo.getStateVector());
         }
-        montecarlo.next(); // Forward the simulation one day.
     }
 
     response
@@ -45,8 +44,8 @@ montecarloContoller.simulate = async (request, response) => {
             activities: montecarloRows,
             minValue: montecarlo.min,
             maxValue: montecarlo.max,
-            mean: montecarlo.mean,
             probFinishedLess45days: montecarlo.getProbability(),
+            mean: montecarlo.mean,
         });
 };
 
