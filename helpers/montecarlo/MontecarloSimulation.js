@@ -5,101 +5,63 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
     this.taskA3 = taskA3;
     this.taskA4 = taskA4;
     this.taskA5 = taskA5;
-    this.dayNumber = 0;
 
-    this.tasksRunning = false;
     this.assemblyTaskDuration = 0;
-    this.lastAssemblyTaskDuration = 0;
-    this.assemblyTaskCounter = 0;
     this.assemblyTask45Counter = 0;
-    this.assemblyTaskFinishedDay = 0;
+    this.dayNumber = 0;
     this.mean = 0;
     this.min = 0;
     this.max = 0;
 
     this.simulate = () => {
         this.dayNumber++;
-        if (this.taskA1.completed && this.taskA2.completed && this.taskA3.completed && this.taskA4.completed && this.taskA5.completed) {
-            // If all tasks completed. Then set flags to false.
-            this.tasksRunning = false;
-            this.taskA1.completed = false;
-            this.taskA2.completed = false;
-            this.taskA3.completed = false;
-            this.taskA4.completed = false;
-            this.taskA5.completed = false;
 
-            if (this.assemblyTaskDuration !== 0 && this.lastAssemblyTaskDuration === 0) {
-                // Set the minium assembly task duration.
-                this.min = this.assemblyTaskDuration;
-            }
+        // Set all task durations that have no precedences first.
+        this.taskA1.calculateTimeToComplete();
+        this.taskA2.calculateTimeToComplete();
+        this.taskA3.calculateTimeToComplete();
 
-            this.lastAssemblyTaskDuration = this.assemblyTaskDuration;
+        // Now. Set the task duration of the task 4.
+        this.taskA4.calculateTimeToComplete();
+        // Add the precedence.
+        this.taskA4.timeToCompleted += this.taskA1.timeToCompleted;
 
-            if (this.lastAssemblyTaskDuration <= 45) {
-                // If the elapsed time of a task is less than 45 days.
-                this.assemblyTask45Counter++;
-            }
+        // Set the duration of the task 5.
+        this.taskA5.calculateTimeToComplete();
+        this.taskA5.timeToCompleted += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
 
-            this.setNewAssemblyTaskDuration();
-            this.assemblyTaskFinishedDay++;
-
-            this.mean = this.getMean();
-            this.assemblyTaskCounter++;
+        if (this.assemblyTaskDuration <= 45) {
+            // If the elapsed time of a task is less than 45 days.
+            this.assemblyTask45Counter++;
         }
 
-        // If there is no tasks running then start new tasks.
-        if (!this.tasksRunning) {
-            // Calulate the elapsed times of the tasks that have no precedences.
-            this.taskA1.calculateTimeToComplete();
-            this.taskA2.calculateTimeToComplete();
-            this.taskA3.calculateTimeToComplete();
+        this.assemblyTaskDuration = this.taskA1.timeToCompleted
+            + this.taskA2.timeToCompleted
+            + this.taskA3.timeToCompleted
+            + this.taskA4.timeToCompleted
+            + this.taskA5.timeToCompleted;
 
-            this.tasksRunning = true; // Set the flag, there are tasks running now.
-            this.assemblyTaskDuration = 1; // Reset the assembly task duration.
-        }
-
-        if (this.taskA1.completed && this.taskA4.timeToCompleted === '-' && !this.taskA4.completed) {
-            // If task a1 is completed and task4 is not started. Then start task A4.
-            this.taskA4.calculateTimeToComplete();
-        }
-
-        if (this.taskA2.completed && this.taskA4.completed && !this.taskA5.completed && this.taskA5.timeToCompleted === '-') {
-            // If task A2 and A4 are completed, then start A5.
-            this.taskA5.calculateTimeToComplete();
-        }
-    };
-
-    this.next = () => {
-        // A day less of each task.
-        this.taskA1.aDayLess();
-        this.taskA1.randomValue = '-';
-        this.taskA2.aDayLess();
-        this.taskA2.randomValue = '-';
-        this.taskA3.aDayLess();
-        this.taskA3.randomValue = '-';
-        this.taskA4.aDayLess();
-        this.taskA4.randomValue = '-';
-        this.taskA5.aDayLess();
-        this.taskA5.randomValue = '-';
-
-        this.assemblyTaskDuration++;
+        this.getMean();
+        this.getBounds();
     };
 
     this.getMean = () => {
-        const x = (1 / this.assemblyTaskFinishedDay) * (((this.assemblyTaskFinishedDay - 1) * this.mean) + this.lastAssemblyTaskDuration);
-        return (Math.round((x) * 10000.0) / 10000.0);
+        const x = (1 / this.dayNumber) * (((this.dayNumber - 1) * this.mean) + this.assemblyTaskDuration);
+        this.mean = (Math.round((x) * 100) / 100);
     };
 
-    this.setNewAssemblyTaskDuration = () => {
+    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.dayNumber) * 10000.0) / 10000.0);
+
+    this.getBounds = () => {
         // Checks for the min or max assembly task duration and stores it.
-        if (this.max <= this.lastAssemblyTaskDuration) {
-            this.max = this.lastAssemblyTaskDuration;
-        } else if (this.min >= this.lastAssemblyTaskDuration) {
-            this.min = this.lastAssemblyTaskDuration;
+        if (this.min === 0) {
+            this.min = this.assemblyTaskDuration;
+        } else if (this.max <= this.assemblyTaskDuration) {
+            this.max = this.assemblyTaskDuration;
+        } else if (this.min >= this.assemblyTaskDuration) {
+            this.min = this.assemblyTaskDuration;
         }
     };
-
-    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.assemblyTaskCounter) * 10000.0) / 10000.0);
 
     this.getStateVector = () => ({
         // Return all the variables to be checked and displayed on the client.
@@ -116,7 +78,6 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         A5DaysLeft: this.taskA5.timeToCompleted,
         assemblyTaskDuration: this.assemblyTaskDuration,
         day: this.dayNumber,
-        lastAssemblyTaskDuration: this.lastAssemblyTaskDuration,
         mean: this.mean,
     });
 }
