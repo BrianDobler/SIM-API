@@ -6,53 +6,52 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
     this.taskA4 = taskA4;
     this.taskA5 = taskA5;
 
+    this.path4 = 0;
+    this.path5 = 0;
     this.assemblyTaskDuration = 0;
     this.assemblyTask45Counter = 0;
-    this.dayNumber = 0;
+    this.simulation = 0;
     this.mean = 0;
     this.min = 0;
     this.max = 0;
 
     this.simulate = () => {
-        this.dayNumber++;
+        this.simulation++;
 
-        // Set all task durations that have no precedences first.
+        // Set all task durations.
         this.taskA1.calculateTimeToComplete();
         this.taskA2.calculateTimeToComplete();
         this.taskA3.calculateTimeToComplete();
-
-        // Now. Set the task duration of the task 4.
         this.taskA4.calculateTimeToComplete();
-        // Add the precedence.
-        this.taskA4.timeToCompleted += this.taskA1.timeToCompleted;
-
-        // Set the duration of the task 5.
         this.taskA5.calculateTimeToComplete();
-        this.taskA5.timeToCompleted += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
+
+        // Add the precedence. Make the path to completed with the A4 and A1 Path.
+        this.path4 = this.taskA4.timeToCompleted + this.taskA1.timeToCompleted;
+
+        // Add the precedence. Make the path to completed with the A4-A2 and A5 Path.
+        this.path5 = this.taskA5.timeToCompleted;
+        this.path5 += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
 
         if (this.assemblyTaskDuration <= 45) {
             // If the elapsed time of a task is less than 45 days.
             this.assemblyTask45Counter++;
         }
 
-        this.assemblyTaskDuration = this.taskA1.timeToCompleted
-            + this.taskA2.timeToCompleted
-            + this.taskA3.timeToCompleted
-            + this.taskA4.timeToCompleted
-            + this.taskA5.timeToCompleted;
+        // Set the assembly task duration. Based on the longest path.
+        this.assemblyTaskDuration = (this.path4 > this.path5) ? this.path4 : this.path5;
 
         this.getMean();
-        this.getBounds();
+        this.updateBounds();
     };
 
     this.getMean = () => {
-        const x = (1 / this.dayNumber) * (((this.dayNumber - 1) * this.mean) + this.assemblyTaskDuration);
-        this.mean = (Math.round((x) * 100) / 100);
+        // this.mean = (Math.round(((1 / this.simulation) * (((this.simulation - 1) * this.mean) + this.assemblyTaskDuration)) * 100) / 100);
+        this.mean = Math.round((((this.mean * (this.simulation - 1)) + this.assemblyTaskDuration) / this.simulation) * 100) / 100;
     };
 
-    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.dayNumber) * 10000.0) / 10000.0);
+    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.simulation) * 10000.0) / 10000.0);
 
-    this.getBounds = () => {
+    this.updateBounds = () => {
         // Checks for the min or max assembly task duration and stores it.
         if (this.min === 0) {
             this.min = this.assemblyTaskDuration;
@@ -76,8 +75,10 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         A4DaysLeft: this.taskA4.timeToCompleted,
         randomA5: this.taskA5.randomValue,
         A5DaysLeft: this.taskA5.timeToCompleted,
+        path4: this.path4,
+        path5: this.path5,
         assemblyTaskDuration: this.assemblyTaskDuration,
-        day: this.dayNumber,
+        day: this.simulation,
         mean: this.mean,
     });
 }
