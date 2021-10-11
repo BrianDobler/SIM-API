@@ -1,9 +1,4 @@
-function LinearCongruentialGenerator(
-    mod = 3578942135498,
-    a = 1234512354,
-    c = 1597563687,
-    seed = 489785354,
-) {
+function LinearCongruentialGenerator(mod, a, c, seed) {
     this.mod = mod;
     this.a = a;
     this.c = c;
