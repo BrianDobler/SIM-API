@@ -48,5 +48,6 @@ montecarloContoller.simulate = async (request: any, response: any) => {
             mean: montecarlo.mean,
             variance: montecarlo.variance,
             deviation: montecarlo.standardDeviation,
+            dateNC90: montecarlo.dateNC90,
         });
 };
