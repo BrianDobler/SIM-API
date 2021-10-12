@@ -1,4 +1,4 @@
-import MontecarloSimulation from '../../helpers/montecarlo/MontecarloSimulation';
+import { MontecarloSimulation } from '../../helpers/montecarlo/MontecarloSimulation';
 import Task from '../../helpers/montecarlo/Task';
 
 export const montecarloContoller: any = {};
@@ -34,10 +34,6 @@ montecarloContoller.simulate = async (request: any, response: any) => {
         if (i <= 20 || ((i % 10000) === 0) || (i >= from && i <= to)) {
             // Store the state vector if the simulation number fits on the given parameters.
             montecarloRows.push(montecarlo.getStateVector());
-            console.log(`Path 4: ${montecarlo.path4}`);
-            console.log(`Path 5: ${montecarlo.path5}`);
-            console.log(`T: ${montecarlo.assemblyTaskDuration}`);
-            console.log(`Mean: ${montecarlo.mean}`);
         }
     }
 
@@ -50,5 +46,7 @@ montecarloContoller.simulate = async (request: any, response: any) => {
             maxValue: montecarlo.max,
             probFinishedLess45days: montecarlo.getProbability(),
             mean: montecarlo.mean,
+            variance: montecarlo.variance,
+            deviation: montecarlo.standardDeviation,
         });
 };
