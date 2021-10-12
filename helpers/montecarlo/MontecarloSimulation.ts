@@ -1,4 +1,5 @@
 import Task from './Task';
+import { computeTStudent } from '../distributions/TStudent';
 
 export class MontecarloSimulation {
     // Naive approach of the montecarlo simulation, to be reviewed.
@@ -17,7 +18,7 @@ export class MontecarloSimulation {
     max: number = 0;
     variance: number = 0;
     standardDeviation: number = 0;
-    fechaNC90: number = 0;
+    dateNC90: number = 0;
 
     constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
         this.taskA1 = taskA1;
@@ -56,6 +57,7 @@ export class MontecarloSimulation {
         this.getMean();
         this.getVariance();
         this.getStandardDeviation();
+        this.getDateNC90();
         this.updateBounds();
     }
 
@@ -74,6 +76,12 @@ export class MontecarloSimulation {
     getStandardDeviation = (): void => {
         const standardDeviation = Math.sqrt(this.variance);
         this.standardDeviation = Math.round((standardDeviation) * 10000.0) / 10000.0;
+    }
+
+    getDateNC90 = (): void => {
+        // Calculates the date to fix if we're looking for a level of trust of 90% of completing the task on that day or before.
+        const x = this.mean + (computeTStudent(0.90, this.simulation - 1) * this.standardDeviation);
+        this.dateNC90 = (this.simulation === 1) ? 0 : Math.round((x) * 10000.0) / 10000.0;
     }
 
     updateBounds = (): void => {
@@ -107,5 +115,6 @@ export class MontecarloSimulation {
         mean: this.mean,
         variance: this.variance,
         standardDeviation: this.standardDeviation,
+        dateNC90: this.dateNC90,
     });
 }
