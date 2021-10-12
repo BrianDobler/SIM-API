@@ -35,8 +35,11 @@ export default class Task {
 
     calculateTimeToComplete = () => {
         // Calculate the task duration based on the probability.
-        this.randomValue = Math.round((this.generator.random()) * 10000.0) / 10000.0;
-        const randomValue2 = Math.round((this.generator.random()) * 10000.0) / 10000.0;
+        const x1 = Math.round((this.generator.random()) * 10000.0) / 10000.0;
+        const x2 = Math.round((this.generator.random()) * 10000.0) / 10000.0;
+        // Make sure that the random generated number is not rounded to one.
+        this.randomValue = (x1 === 1) ? 0.9999 : x1;
+        const randomValue2 = (x2 === 1) ? 0.9999 : x2;
 
         this.timeToCompleted = Math.floor(this.distribution.nextValue(this.randomValue, randomValue2));
     };
