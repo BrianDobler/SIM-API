@@ -1,8 +1,8 @@
-const MontecarloSimulation = require('../../helpers/montecarlo/MontecarloSimulation');
-const Task = require('../../helpers/montecarlo/Task');
+import MontecarloSimulation from '../../helpers/montecarlo/MontecarloSimulation';
+import Task from '../../helpers/montecarlo/Task';
 
-const montecarloContoller = {};
-montecarloContoller.simulate = async (request, response) => {
+export const montecarloContoller: any = {};
+montecarloContoller.simulate = async (request: any, response: any) => {
     const { body } = request;
     const {
         numberOfSimulations,
@@ -34,6 +34,10 @@ montecarloContoller.simulate = async (request, response) => {
         if (i <= 20 || ((i % 10000) === 0) || (i >= from && i <= to)) {
             // Store the state vector if the simulation number fits on the given parameters.
             montecarloRows.push(montecarlo.getStateVector());
+            console.log(`Path 4: ${montecarlo.path4}`);
+            console.log(`Path 5: ${montecarlo.path5}`);
+            console.log(`T: ${montecarlo.assemblyTaskDuration}`);
+            console.log(`Mean: ${montecarlo.mean}`);
         }
     }
 
@@ -48,5 +52,3 @@ montecarloContoller.simulate = async (request, response) => {
             mean: montecarlo.mean,
         });
 };
-
-module.exports = montecarloContoller;

@@ -1,15 +1,20 @@
-const UniformDistribution = require('../distributions/UniformDistribution');
-const NormalDistribution = require('../distributions/NormalDistribution');
-const ExponentialDistribution = require('../distributions/ExponentialDistribution');
-const LCG = require('../generators/LinearCongruentialGenerator');
+import Generator from '../generators/Generator';
+import UniformDistribution from '../distributions/UniformDistribution';
+import NormalDistribution from '../distributions/NormalDistribution';
+import ExponentialDistribution from '../distributions/ExponentialDistribution';
 
-function Task() {
-    this.distribution = null;
-    this.timeToCompleted = '-';
-    this.generator = null;
-    this.randomValue = '-';
+export default class Task {
+    distribution: any;
+    timeToCompleted: number;
+    generator: any;
+    randomValue: number;
 
-    this.setDistribution = (distributionType, parameters) => {
+    constructor() {
+        this.timeToCompleted = 0;
+        this.randomValue = 0;
+    }
+
+    setDistribution = (distributionType: String, parameters: any) => {
         // Set the distribution of the task.
         if (distributionType === 'uniform') {
             const taskDistribution = new UniformDistribution(parameters.A, parameters.B);
@@ -21,14 +26,14 @@ function Task() {
             const taskDistribution = new ExponentialDistribution(parameters.lambda);
             this.distribution = taskDistribution;
         }
-    };
+    }
 
-    this.setGenerator = (generator) => {
+    setGenerator = (generator: any) => {
         // Set the random number generator for the task.
-        this.generator = (generator == null) ? Math : new LCG(generator.mod, generator.a, generator.c, generator.seed);
+        this.generator = (generator == null) ? Math : new Generator(generator.mod, generator.a, generator.c, generator.seed);
     };
 
-    this.calculateTimeToComplete = () => {
+    calculateTimeToComplete = () => {
         // Calculate the task duration based on the probability.
         this.randomValue = Math.round((this.generator.random()) * 10000.0) / 10000.0;
         const randomValue2 = Math.round((this.generator.random()) * 10000.0) / 10000.0;
@@ -36,5 +41,3 @@ function Task() {
         this.timeToCompleted = Math.floor(this.distribution.nextValue(this.randomValue, randomValue2));
     };
 }
-
-module.exports = Task;

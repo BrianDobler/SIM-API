@@ -1,21 +1,39 @@
-function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
+import Task from './Task';
+
+export default class MontecarloSimulation {
     // Naive approach of the montecarlo simulation, to be reviewed.
-    this.taskA1 = taskA1;
-    this.taskA2 = taskA2;
-    this.taskA3 = taskA3;
-    this.taskA4 = taskA4;
-    this.taskA5 = taskA5;
+    taskA1: Task;
+    taskA2: Task;
+    taskA3: Task;
+    taskA4: Task;
+    taskA5: Task;
+    path4: number;
+    path5: number;
+    assemblyTaskDuration: number;
+    assemblyTask45Counter: number;
+    simulation: number;
+    mean: number;
+    min: number;
+    max: number;
 
-    this.path4 = 0;
-    this.path5 = 0;
-    this.assemblyTaskDuration = 0;
-    this.assemblyTask45Counter = 0;
-    this.simulation = 0;
-    this.mean = 0;
-    this.min = 0;
-    this.max = 0;
+    constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
+        this.taskA1 = taskA1;
+        this.taskA2 = taskA2;
+        this.taskA3 = taskA3;
+        this.taskA4 = taskA4;
+        this.taskA5 = taskA5;
 
-    this.simulate = () => {
+        this.path4 = 0;
+        this.path5 = 0;
+        this.assemblyTaskDuration = 0;
+        this.assemblyTask45Counter = 0;
+        this.simulation = 0;
+        this.mean = 0;
+        this.min = 0;
+        this.max = 0;
+    }
+
+    simulate = (): void => {
         this.simulation++;
 
         // Set all task durations.
@@ -38,20 +56,19 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         }
 
         // Set the assembly task duration. Based on the longest path.
-        this.assemblyTaskDuration = (this.path4 > this.path5) ? this.path4 : this.path5;
+        this.assemblyTaskDuration = (this.path4 >= this.path5) ? this.path4 : this.path5;
 
         this.getMean();
         this.updateBounds();
-    };
+    }
 
-    this.getMean = () => {
-        // this.mean = (Math.round(((1 / this.simulation) * (((this.simulation - 1) * this.mean) + this.assemblyTaskDuration)) * 100) / 100);
-        this.mean = Math.round((((this.mean * (this.simulation - 1)) + this.assemblyTaskDuration) / this.simulation) * 100) / 100;
-    };
+    getMean = (): void => {
+        this.mean = Math.round((((this.mean * (this.simulation - 1)) + this.assemblyTaskDuration) / this.simulation) * 100.0) / 100.0;
+    }
 
-    this.getProbability = () => (Math.round((this.assemblyTask45Counter / this.simulation) * 10000.0) / 10000.0);
+    getProbability = (): number => (Math.round((this.assemblyTask45Counter / this.simulation) * 10000.0) / 10000.0);
 
-    this.updateBounds = () => {
+    updateBounds = (): void => {
         // Checks for the min or max assembly task duration and stores it.
         if (this.min === 0) {
             this.min = this.assemblyTaskDuration;
@@ -60,9 +77,9 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         } else if (this.min >= this.assemblyTaskDuration) {
             this.min = this.assemblyTaskDuration;
         }
-    };
+    }
 
-    this.getStateVector = () => ({
+    getStateVector = (): any => ({
         // Return all the variables to be checked and displayed on the client.
         // This is the state vector.
         randomA1: this.taskA1.randomValue,
@@ -82,4 +99,3 @@ function MontecarloSimulation(taskA1, taskA2, taskA3, taskA4, taskA5) {
         mean: this.mean,
     });
 }
-module.exports = MontecarloSimulation;

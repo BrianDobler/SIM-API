@@ -12,7 +12,7 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // Just a method checking if the conecction is alive.
-app.get('/ping', (request, response) => {
+app.get('/ping', (request: any, response: any) => {
     response
         .status(200)
         .json('Pong');
