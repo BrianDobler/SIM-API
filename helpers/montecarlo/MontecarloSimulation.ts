@@ -8,8 +8,9 @@ export class MontecarloSimulation {
     taskA3: Task;
     taskA4: Task;
     taskA5: Task;
-    path4: number = 0;
-    path5: number = 0;
+    path1: number = 0;
+    path2: number = 0;
+    path3: number = 0;
     assemblyTaskDuration: number = 0;
     assemblyTask45Counter: number = 0;
     simulation: number = 0;
@@ -19,6 +20,7 @@ export class MontecarloSimulation {
     variance: number = 0;
     standardDeviation: number = 0;
     dateNC90: number = 0;
+    intervals: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
         this.taskA1 = taskA1;
@@ -38,12 +40,17 @@ export class MontecarloSimulation {
         this.taskA4.calculateTimeToComplete();
         this.taskA5.calculateTimeToComplete();
 
-        // Add the precedence. Make the path to completed with the A4 and A1 Path.
-        this.path4 = this.taskA4.timeToCompleted + this.taskA1.timeToCompleted;
+        // Path 1 (A1 - A5 - A5)
+        this.path1 = this.taskA4.timeToCompleted + this.taskA1.timeToCompleted + this.taskA5.timeToCompleted;
 
-        // Add the precedence. Make the path to completed with the A4-A2 and A5 Path.
-        this.path5 = this.taskA5.timeToCompleted;
-        this.path5 += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
+        // Path 2 (A2 - A5)
+        this.path2 = this.taskA2.timeToCompleted + this.taskA5.timeToCompleted;
+
+        // Path 3 (A3)
+        this.path3 = this.taskA3.timeToCompleted;
+
+        // this.path5 = this.taskA5.timeToCompleted;
+        // this.path5 += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
 
         if (this.assemblyTaskDuration <= 45) {
             // If the elapsed time of a task is less than 45 days.
@@ -51,14 +58,25 @@ export class MontecarloSimulation {
         }
 
         // Set the assembly task duration. Based on the longest path.
-        this.assemblyTaskDuration = (this.path4 >= this.path5) ? this.path4 : this.path5;
+        this.setAssemblyTaskDuration();
 
         // Update from the last row the parameters.
+        this.createIntervals();
         this.getMean();
         this.getVariance();
         this.getStandardDeviation();
         this.getDateNC90();
         this.updateBounds();
+    }
+
+    createIntervals = (): void => {
+        if (this.simulation < 15) {
+            console.log(this.intervals);
+        }
+    }
+
+    setAssemblyTaskDuration = (): void => {
+        this.assemblyTaskDuration = Math.max(this.path1, this.path2, this.path3);
     }
 
     getMean = (): void => {
@@ -108,8 +126,9 @@ export class MontecarloSimulation {
         A4DaysLeft: this.taskA4.timeToCompleted,
         randomA5: this.taskA5.randomValue,
         A5DaysLeft: this.taskA5.timeToCompleted,
-        path4: this.path4,
-        path5: this.path5,
+        path1: this.path1,
+        path2: this.path2,
+        path3: this.path3,
         assemblyTaskDuration: this.assemblyTaskDuration,
         day: this.simulation,
         mean: this.mean,
