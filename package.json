@@ -2,11 +2,11 @@
   "name": "express-api",
   "version": "1.0.0",
   "description": "Una API para la materia SIM",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
     "test": "NODE_ENV=test jest --watchAll --forceExit",
     "dev": "nodemon app.ts",
-    "start": "node app.ts",
+    "start": "tsc && node dist/app.js",
     "build": "tsc --project ./"
   },
   "author": "Gino Massei",
