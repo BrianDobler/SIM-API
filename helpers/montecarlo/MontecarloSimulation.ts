@@ -38,13 +38,6 @@ export class MontecarloSimulation {
         this.taskA3 = taskA3;
         this.taskA4 = taskA4;
         this.taskA5 = taskA5;
-
-        // Setting the activities path.
-        this.taskA1.path = ['C1'];
-        this.taskA2.path = ['C2'];
-        this.taskA3.path = ['C3'];
-        this.taskA4.path = ['C1'];
-        this.taskA5.path = ['C1', 'C2'];
     }
 
     simulate = (): void => {
