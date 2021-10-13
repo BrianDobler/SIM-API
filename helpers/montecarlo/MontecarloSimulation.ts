@@ -86,25 +86,37 @@ export class MontecarloSimulation {
     }
 
     calculateCriticalPath = (): void => {
-        if (this.criticalPath === 'C1') {
-            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        } else if (this.criticalPath === 'C2') {
-            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        } else if (this.criticalPath === 'C3') {
-            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        }
+        // if (this.criticalPath === 'C1') {
+        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        // } else if (this.criticalPath === 'C2') {
+        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        // } else if (this.criticalPath === 'C3') {
+        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        // }
+
+        const arrayThor: Record<string, Array<number>> = {
+            C1: [1, 0, 0, 1, 0],
+            C2: [0, 1, 0, 0, 1],
+            C3: [0, 0, 1, 0, 1],
+        };
+
+        this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + arrayThor[this.criticalPath][0]) / this.simulation) * 10) / 10;
+        this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + arrayThor[this.criticalPath][1]) / this.simulation) * 10) / 10;
+        this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + arrayThor[this.criticalPath][2]) / this.simulation) * 10) / 10;
+        this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + arrayThor[this.criticalPath][3]) / this.simulation) * 10) / 10;
+        this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + arrayThor[this.criticalPath][4]) / this.simulation) * 10) / 10;
     }
 
     setAssemblyTaskDuration = (): void => {
