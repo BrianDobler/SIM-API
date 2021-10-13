@@ -31,6 +31,8 @@ export class MontecarloSimulation {
     criticalA4: number = 0;
     criticalA5: number = 0;
     criticalPath: string = '';
+    intervals: number[] = [0];
+    percentages: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
         this.taskA1 = taskA1;
@@ -83,29 +85,40 @@ export class MontecarloSimulation {
         this.activity4 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA4.timeToCompleted;
         this.activity5 = this.assemblyTaskDuration - this.taskA5.timeToCompleted;
         this.calculateCriticalPath();
+
+        if (this.simulation <= 15) {
+            // Make the 15 first intervals based on tuhe 15 first simulations.
+            this.intervaleitor(this.assemblyTaskDuration);
+        }
+
+        // On the 15th simulation make the percentage of the intervals.
+        if (this.simulation === 15) {
+            this.percentages = this.percentages.map(() => 1 / this.simulation);
+        }
+
+        if (this.simulation >= 16) {
+            for (let i = 0; i < this.percentages.length - 1; i++) {
+                if (this.assemblyTaskDuration >= this.intervals[i] && this.assemblyTaskDuration <= this.intervals[i + 1]) {
+                    this.percentages[i] = (this.percentages[i] * (this.simulation + 1)) / this.simulation;
+                } else {
+                    this.percentages[i] = (this.percentages[i] * (this.simulation + 0)) / this.simulation;
+                }
+            }
+        }
+    }
+
+    intervaleitor = (value: number): void => {
+        this.intervals.push(value);
+        let i = this.intervals.length - 1;
+        const item = this.intervals[i];
+        while (i > 1 && item < this.intervals[i - 1]) {
+            this.intervals[i] = this.intervals[i - 1];
+            i -= 1;
+        }
+        this.intervals[i] = item;
     }
 
     calculateCriticalPath = (): void => {
-        // if (this.criticalPath === 'C1') {
-        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        // } else if (this.criticalPath === 'C2') {
-        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        // } else if (this.criticalPath === 'C3') {
-        //     this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        //     this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
-        //     this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
-        // }
-
         const arrayThor: Record<string, Array<number>> = {
             C1: [1, 0, 0, 1, 0],
             C2: [0, 1, 0, 0, 1],
@@ -129,6 +142,8 @@ export class MontecarloSimulation {
             this.criticalPath = 'C3';
         }
     }
+
+    round = (number: number) => Math.round(number * 100) / 100;
 
     getMean = (): void => {
         this.mean = Math.round((((this.mean * (this.simulation - 1)) + this.assemblyTaskDuration) / this.simulation) * 100.0) / 100.0;
@@ -197,5 +212,36 @@ export class MontecarloSimulation {
         criticalA3: this.criticalA3,
         criticalA4: this.criticalA4,
         criticalA5: this.criticalA5,
+        interval0: this.intervals[0],
+        interval1: this.intervals[1],
+        interval2: this.intervals[2],
+        interval3: this.intervals[3],
+        interval4: this.intervals[4],
+        interval5: this.intervals[5],
+        interval6: this.intervals[6],
+        interval7: this.intervals[7],
+        interval8: this.intervals[8],
+        interval9: this.intervals[9],
+        interval10: this.intervals[10],
+        interval11: this.intervals[11],
+        interval12: this.intervals[12],
+        interval13: this.intervals[13],
+        interval14: this.intervals[14],
+        interval15: this.intervals[15],
+        percentage0: this.percentages[0],
+        percentage1: this.percentages[1],
+        percentage2: this.percentages[2],
+        percentage3: this.percentages[3],
+        percentage4: this.percentages[4],
+        percentage5: this.percentages[5],
+        percentage6: this.percentages[6],
+        percentage7: this.percentages[7],
+        percentage8: this.percentages[8],
+        percentage9: this.percentages[9],
+        percentage10: this.percentages[10],
+        percentage11: this.percentages[11],
+        percentage12: this.percentages[12],
+        percentage13: this.percentages[13],
+        percentage14: this.percentages[14],
     });
 }
