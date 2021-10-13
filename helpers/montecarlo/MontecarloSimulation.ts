@@ -20,7 +20,17 @@ export class MontecarloSimulation {
     variance: number = 0;
     standardDeviation: number = 0;
     dateNC90: number = 0;
-    intervals: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    activity1: number = 0;
+    activity2: number = 0;
+    activity3: number = 0;
+    activity4: number = 0;
+    activity5: number = 0;
+    criticalA1: number = 0;
+    criticalA2: number = 0;
+    criticalA3: number = 0;
+    criticalA4: number = 0;
+    criticalA5: number = 0;
+    criticalPath: string = '';
 
     constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
         this.taskA1 = taskA1;
@@ -28,6 +38,13 @@ export class MontecarloSimulation {
         this.taskA3 = taskA3;
         this.taskA4 = taskA4;
         this.taskA5 = taskA5;
+
+        // Setting the activities path.
+        this.taskA1.path = ['C1'];
+        this.taskA2.path = ['C2'];
+        this.taskA3.path = ['C3'];
+        this.taskA4.path = ['C1'];
+        this.taskA5.path = ['C1', 'C2'];
     }
 
     simulate = (): void => {
@@ -61,22 +78,51 @@ export class MontecarloSimulation {
         this.setAssemblyTaskDuration();
 
         // Update from the last row the parameters.
-        this.createIntervals();
         this.getMean();
         this.getVariance();
         this.getStandardDeviation();
         this.getDateNC90();
         this.updateBounds();
+
+        this.activity1 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA4.timeToCompleted - this.taskA1.timeToCompleted;
+        this.activity2 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA2.timeToCompleted;
+        this.activity3 = this.assemblyTaskDuration - this.taskA3.timeToCompleted;
+        this.activity4 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA4.timeToCompleted;
+        this.activity5 = this.assemblyTaskDuration - this.taskA5.timeToCompleted;
+        this.calculateCriticalPath();
     }
 
-    createIntervals = (): void => {
-        if (this.simulation < 15) {
-            console.log(this.intervals);
+    calculateCriticalPath = (): void => {
+        if (this.criticalPath === 'C1') {
+            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+        } else if (this.criticalPath === 'C2') {
+            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+        } else if (this.criticalPath === 'C3') {
+            this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA2 = Math.round((((this.criticalA2 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA3 = Math.round((((this.criticalA3 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
+            this.criticalA4 = Math.round((((this.criticalA4 * (this.simulation - 1)) + 0) / this.simulation) * 10) / 10;
+            this.criticalA5 = Math.round((((this.criticalA5 * (this.simulation - 1)) + 1) / this.simulation) * 10) / 10;
         }
     }
 
     setAssemblyTaskDuration = (): void => {
         this.assemblyTaskDuration = Math.max(this.path1, this.path2, this.path3);
+        if (Math.max(this.path1, this.path2, this.path3) === this.path1) {
+            this.criticalPath = 'C1';
+        } else if (Math.max(this.path1, this.path2, this.path3) === this.path2) {
+            this.criticalPath = 'C2';
+        } else {
+            this.criticalPath = 'C3';
+        }
     }
 
     getMean = (): void => {
@@ -135,5 +181,16 @@ export class MontecarloSimulation {
         variance: this.variance,
         standardDeviation: this.standardDeviation,
         dateNC90: this.dateNC90,
+        A1: this.activity1,
+        A2: this.activity2,
+        A3: this.activity3,
+        A4: this.activity4,
+        A5: this.activity5,
+        criticalPath: this.criticalPath,
+        criticalA1: this.criticalA1,
+        criticalA2: this.criticalA2,
+        criticalA3: this.criticalA3,
+        criticalA4: this.criticalA4,
+        criticalA5: this.criticalA5,
     });
 }
