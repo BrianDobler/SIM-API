@@ -33,6 +33,8 @@ export class MontecarloSimulation {
     criticalPath: string = '';
     intervals: number[] = [0];
     percentages: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    probability: number = 0;
+    probabilityMean: number = 0;
 
     constructor(taskA1: Task, taskA2: Task, taskA3: Task, taskA4: Task, taskA5: Task) {
         this.taskA1 = taskA1;
@@ -78,6 +80,8 @@ export class MontecarloSimulation {
         this.getStandardDeviation();
         this.getDateNC90();
         this.updateBounds();
+        this.probability = this.getProbability();
+        this.getProbabilityMean();
 
         this.activity1 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA4.timeToCompleted - this.taskA1.timeToCompleted;
         this.activity2 = this.assemblyTaskDuration - this.taskA5.timeToCompleted - this.taskA2.timeToCompleted;
@@ -151,6 +155,10 @@ export class MontecarloSimulation {
     }
 
     getProbability = (): number => (Math.round((this.assemblyTask45Counter / this.simulation) * 10000.0) / 10000.0);
+
+    getProbabilityMean = (): void => {
+        this.probabilityMean = Math.round((((this.probabilityMean * (this.simulation - 1)) + this.probability) / this.simulation) * 100.0) / 100.0;
+    }
 
     getVariance = (): void => {
         const variance = (((this.simulation - 2) * this.variance) + ((this.simulation / (this.simulation - 1)) * ((this.mean - this.assemblyTaskDuration) ** 2))) / (this.simulation - 1);
@@ -243,5 +251,7 @@ export class MontecarloSimulation {
         percentage12: this.percentages[12],
         percentage13: this.percentages[13],
         percentage14: this.percentages[14],
+        probability: this.probability,
+        probabilityMean: this.probabilityMean,
     });
 }

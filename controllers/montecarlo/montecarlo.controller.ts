@@ -44,7 +44,7 @@ montecarloContoller.simulate = async (request: any, response: any) => {
             activities: montecarloRows,
             minValue: montecarlo.min,
             maxValue: montecarlo.max,
-            probFinishedLess45days: montecarlo.getProbability(),
+            probFinishedLess45days: montecarlo.probabilityMean,
             mean: montecarlo.mean,
             variance: montecarlo.variance,
             deviation: montecarlo.standardDeviation,
