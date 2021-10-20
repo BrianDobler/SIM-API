@@ -63,9 +63,6 @@ export class MontecarloSimulation {
         // Path 3 (A3)
         this.path3 = this.taskA3.timeToCompleted;
 
-        // this.path5 = this.taskA5.timeToCompleted;
-        // this.path5 += (this.taskA2.timeToCompleted >= this.taskA4.timeToCompleted) ? this.taskA2.timeToCompleted : this.taskA4.timeToCompleted;
-
         if (this.assemblyTaskDuration <= 45) {
             // If the elapsed time of a task is less than 45 days.
             this.assemblyTask45Counter++;
@@ -124,7 +121,7 @@ export class MontecarloSimulation {
 
     calculateCriticalPath = (): void => {
         const arrayThor: Record<string, Array<number>> = {
-            C1: [1, 0, 0, 1, 0],
+            C1: [1, 0, 0, 1, 1],
             C2: [0, 1, 0, 0, 1],
             C3: [0, 0, 1, 0, 1],
         };
@@ -142,7 +139,7 @@ export class MontecarloSimulation {
             this.criticalPath = 'C1';
         } else if (Math.max(this.path1, this.path2, this.path3) === this.path2) {
             this.criticalPath = 'C2';
-        } else {
+        } else if (Math.max(this.path1, this.path2, this.path3) === this.path3) {
             this.criticalPath = 'C3';
         }
     }
