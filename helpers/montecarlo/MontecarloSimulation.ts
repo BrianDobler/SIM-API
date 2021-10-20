@@ -123,7 +123,7 @@ export class MontecarloSimulation {
         const arrayThor: Record<string, Array<number>> = {
             C1: [1, 0, 0, 1, 1],
             C2: [0, 1, 0, 0, 1],
-            C3: [0, 0, 1, 0, 1],
+            C3: [0, 0, 1, 0, 0],
         };
 
         this.criticalA1 = Math.round((((this.criticalA1 * (this.simulation - 1)) + arrayThor[this.criticalPath][0]) / this.simulation) * 10) / 10;
